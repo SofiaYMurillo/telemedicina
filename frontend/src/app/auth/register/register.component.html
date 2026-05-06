@@ -1,0 +1,35 @@
+<section class="container">
+  <div class="page-title">
+    <h1>Registro</h1>
+    <p>Crea tu cuenta de paciente para usar el triaje automatizado y las teleconsultas.</p>
+  </div>
+
+  <div class="card" style="max-width: 560px;">
+    @if (error()) {
+      <div class="alert error">{{ error() }}</div>
+    }
+
+    <form class="form-grid" (ngSubmit)="submit()">
+      <label>
+        Nombre completo
+        <input name="name" [(ngModel)]="name" required>
+      </label>
+
+      <label>
+        Email
+        <input name="email" type="email" [(ngModel)]="email" required>
+      </label>
+
+      <label>
+        Contrasena
+        <input name="password" type="password" [(ngModel)]="password" required minlength="8">
+      </label>
+
+      <button class="btn" type="submit" [disabled]="loading()">
+        {{ loading() ? 'Creando...' : 'Crear cuenta' }}
+      </button>
+    </form>
+
+    <p class="muted">Ya tienes cuenta? <a routerLink="/login"><strong>Inicia sesion</strong></a></p>
+  </div>
+</section>

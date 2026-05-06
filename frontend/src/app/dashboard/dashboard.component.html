@@ -1,0 +1,50 @@
+<section class="container">
+  <div class="page-title">
+    <h1>Hola, {{ auth.user()?.name }}</h1>
+    <p>Panel principal de MediTriage Connect. Rol actual: <strong>{{ roleLabel() }}</strong></p>
+    <p class="muted">{{ welcomeCopy() }}</p>
+  </div>
+
+  <div class="grid">
+    @if (auth.user()?.role === 'PATIENT') {
+      <article class="card">
+        <h2>Triaje Automatizado</h2>
+        <p class="muted">Registra sintomas, recibe una prioridad de atencion y consulta tu historial.</p>
+        <div class="actions">
+          <a class="btn" routerLink="/triage">Evaluar sintomas</a>
+          <a class="btn secondary" routerLink="/triage/history">Ver historial</a>
+        </div>
+      </article>
+    }
+
+    <article class="card">
+      <h2>Telemedicina</h2>
+      <p class="muted">
+        @if (auth.user()?.role === 'DOCTOR') {
+          Consulta pacientes pendientes de aprobacion, revisa las citas confirmadas y separa el historial ya atendido.
+        } @else if (auth.user()?.role === 'ADMIN') {
+          Supervisa lo que atiende cada doctor y controla las citas pendientes desde un panel central.
+        } @else {
+          Elige tu doctor, agenda tu cita y cancelala si lo necesitas.
+        }
+      </p>
+      <div class="actions">
+        @if (auth.user()?.role === 'PATIENT') {
+          <a class="btn" routerLink="/appointments/new">Agendar cita</a>
+        }
+        <a class="btn secondary" routerLink="/appointments">Ver citas</a>
+      </div>
+    </article>
+
+    @if (auth.user()?.role === 'ADMIN') {
+      <article class="card">
+        <h2>Reporte administrativo</h2>
+        <p class="muted">Consulta cuantos pacientes ha atendido cada doctor y revisa fecha, motivo y estado de cada cita.</p>
+        <div class="actions">
+          <a class="btn" routerLink="/admin/report">Abrir reporte</a>
+        </div>
+      </article>
+    }
+
+  </div>
+</section>

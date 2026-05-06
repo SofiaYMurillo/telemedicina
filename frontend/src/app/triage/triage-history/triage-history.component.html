@@ -1,0 +1,32 @@
+<section class="container">
+  <div class="page-title">
+    <h1>Historial de triaje</h1>
+    <p>Resultados anteriores del paciente autenticado.</p>
+  </div>
+
+  <div class="actions" style="margin-bottom: 16px;">
+    <a class="btn" routerLink="/triage">Nuevo triaje</a>
+  </div>
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  <div class="list">
+    @for (item of items(); track item.id) {
+      <article class="card">
+        <div class="actions" style="justify-content: space-between;">
+          <span class="badge {{ item.riskLevel }}">{{ item.riskLevel }}</span>
+          <span class="muted">{{ item.createdAt | date:'medium' }}</span>
+        </div>
+        <h3>{{ item.suggestedSpecialty }}</h3>
+        <p>{{ item.recommendation }}</p>
+        <p class="muted"><strong>Síntomas:</strong> {{ item.symptoms.join(', ') }}</p>
+      </article>
+    } @empty {
+      <div class="card">
+        <p class="muted">No hay registros de triaje todavía.</p>
+      </div>
+    }
+  </div>
+</section>

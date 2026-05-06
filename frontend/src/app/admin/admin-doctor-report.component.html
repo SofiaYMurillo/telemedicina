@@ -1,0 +1,79 @@
+<section class="container">
+  <div class="page-title">
+    <h1>Reporte administrativo</h1>
+    <p>Resumen por doctor con pacientes atendidos, citas pendientes y detalle de fecha y motivo.</p>
+  </div>
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  <div class="card" style="margin-bottom: 18px;">
+    <h2>Citas pendientes por aprobar</h2>
+    @for (item of pendingAppointments(); track item.id) {
+      <div style="padding: 14px 0; border-bottom: 1px solid var(--border);">
+        <div class="actions" style="justify-content: space-between;">
+          <strong>{{ item.doctorName }} - {{ item.patientName }}</strong>
+          <span class="muted">{{ item.scheduledAt | date:'medium' }}</span>
+        </div>
+        <p><strong>Motivo:</strong> {{ item.reason }}</p>
+        <div class="actions">
+          <button class="btn danger" (click)="cancelPending(item.id)">Cancelar pendiente</button>
+        </div>
+      </div>
+    } @empty {
+      <p class="muted">No hay citas pendientes por cancelar.</p>
+    }
+  </div>
+
+  <div class="list">
+    @for (doctor of doctorActivity(); track doctor.doctorId) {
+      <article class="card">
+        <div class="actions" style="justify-content: space-between;">
+          <div>
+            <h2 style="margin: 0;">{{ doctor.doctorName }}</h2>
+            <p class="muted" style="margin: 6px 0 0;">{{ doctor.specialty }}</p>
+          </div>
+          <div class="actions">
+            <span class="badge COMPLETED">Atendidos: {{ doctor.completedCount }}</span>
+            <span class="badge PENDING">Pendientes: {{ doctor.pendingCount }}</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px;">
+          <h3>Pacientes atendidos</h3>
+          @for (item of doctor.completedAppointments; track item.id) {
+            <div style="padding: 12px 0; border-bottom: 1px solid var(--border);">
+              <div class="actions" style="justify-content: space-between;">
+                <strong>{{ item.patientName }}</strong>
+                <span class="muted">{{ item.scheduledAt | date:'medium' }}</span>
+              </div>
+              <p><strong>Motivo:</strong> {{ item.reason }}</p>
+            </div>
+          } @empty {
+            <p class="muted">Este doctor aun no tiene pacientes marcados como atendidos.</p>
+          }
+        </div>
+
+        <div style="margin-top: 18px;">
+          <h3>Pacientes esperando aprobacion</h3>
+          @for (item of doctor.pendingAppointments; track item.id) {
+            <div style="padding: 12px 0; border-bottom: 1px solid var(--border);">
+              <div class="actions" style="justify-content: space-between;">
+                <strong>{{ item.patientName }}</strong>
+                <span class="muted">{{ item.scheduledAt | date:'medium' }}</span>
+              </div>
+              <p><strong>Motivo:</strong> {{ item.reason }}</p>
+            </div>
+          } @empty {
+            <p class="muted">No tiene pacientes pendientes en este momento.</p>
+          }
+        </div>
+      </article>
+    } @empty {
+      <article class="card">
+        <p class="muted">Aun no existen registros de citas para mostrar en el reporte.</p>
+      </article>
+    }
+  </div>
+</section>

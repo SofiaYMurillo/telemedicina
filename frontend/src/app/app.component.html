@@ -1,0 +1,27 @@
+<header class="topbar">
+  <a routerLink="/dashboard" class="brand">
+    <span class="logo">+</span>
+    <span>MediTriage Connect</span>
+  </a>
+
+  <nav>
+    @if (auth.isAuthenticated()) {
+      <a routerLink="/dashboard">Dashboard</a>
+      @if (auth.user()?.role === 'PATIENT') {
+        <a routerLink="/triage">Triaje</a>
+      }
+      <a routerLink="/appointments">Citas</a>
+      @if (auth.user()?.role === 'ADMIN') {
+        <a routerLink="/admin/report">Reporte admin</a>
+      }
+      <button class="btn secondary" (click)="logout()">Salir</button>
+    } @else {
+      <a routerLink="/login">Login</a>
+      <a routerLink="/register">Registro</a>
+    }
+  </nav>
+</header>
+
+<main>
+  <router-outlet />
+</main>

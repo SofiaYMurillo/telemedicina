@@ -1,0 +1,127 @@
+<section class="container">
+  <div class="page-title">
+    <h1>{{ pageTitle() }}</h1>
+    <p>{{ subtitle() }}</p>
+  </div>
+
+  @if (isPatient()) {
+    <div class="actions" style="margin-bottom: 16px;">
+      <a class="btn" routerLink="/appointments/new">Nueva cita</a>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert error">{{ error() }}</div>
+  }
+
+  @if (isDoctor()) {
+    <div class="grid" style="margin-bottom: 18px;">
+      <article class="card">
+        <h2>Esperando aprobacion</h2>
+        <p class="muted">{{ pendingAppointments().length }} pacientes pendientes.</p>
+      </article>
+      <article class="card">
+        <h2>Citas aprobadas</h2>
+        <p class="muted">{{ confirmedAppointments().length }} citas confirmadas.</p>
+      </article>
+      <article class="card">
+        <h2>Pacientes atendidos</h2>
+        <p class="muted">{{ completedAppointments().length }} atenciones completadas.</p>
+      </article>
+    </div>
+
+    <div class="list">
+      <article class="card">
+        <h2>Pacientes esperando aprobacion</h2>
+        @for (item of pendingAppointments(); track item.id) {
+          <div style="padding: 14px 0; border-bottom: 1px solid var(--border);">
+            <div class="actions" style="justify-content: space-between;">
+              <strong>{{ item.patientName }}</strong>
+              <span class="muted">{{ item.scheduledAt | date:'medium' }}</span>
+            </div>
+            <p><strong>Motivo:</strong> {{ item.reason }}</p>
+            <div class="actions">
+              <button class="btn" (click)="confirm(item.id)">Aprobar cita</button>
+            </div>
+          </div>
+        } @empty {
+          <p class="muted">No tienes pacientes pendientes por aprobar.</p>
+        }
+      </article>
+
+      <article class="card">
+        <h2>Citas ya aprobadas</h2>
+        @for (item of confirmedAppointments(); track item.id) {
+          <div style="padding: 14px 0; border-bottom: 1px solid var(--border);">
+            <div class="actions" style="justify-content: space-between;">
+              <strong>{{ item.patientName }}</strong>
+              <span class="muted">{{ item.scheduledAt | date:'medium' }}</span>
+            </div>
+            <p><strong>Motivo:</strong> {{ item.reason }}</p>
+            <div class="actions">
+              <button class="btn secondary" (click)="complete(item.id)">Marcar atendido</button>
+            </div>
+          </div>
+        } @empty {
+          <p class="muted">No tienes citas confirmadas en este momento.</p>
+        }
+      </article>
+
+      <article class="card">
+        <h2>Pacientes ya atendidos</h2>
+        @for (item of completedAppointments(); track item.id) {
+          <div style="padding: 14px 0; border-bottom: 1px solid var(--border);">
+            <div class="actions" style="justify-content: space-between;">
+              <strong>{{ item.patientName }}</strong>
+              <span class="muted">{{ item.scheduledAt | date:'medium' }}</span>
+            </div>
+            <p><strong>Motivo:</strong> {{ item.reason }}</p>
+          </div>
+        } @empty {
+          <p class="muted">Aun no tienes pacientes marcados como atendidos.</p>
+        }
+      </article>
+    </div>
+  } @else {
+    <div class="list">
+      @for (item of appointments(); track item.id) {
+        <article class="card">
+          <div class="actions" style="justify-content: space-between;">
+            <span class="badge {{ item.status }}">{{ item.status }}</span>
+            <span class="muted">{{ item.scheduledAt | date:'medium' }}</span>
+          </div>
+          <h3>{{ item.doctorName }}</h3>
+          @if (isAdmin()) {
+            <p><strong>Paciente:</strong> {{ item.patientName }}</p>
+          }
+          <p><strong>Especialidad:</strong> {{ item.doctorSpecialty }}</p>
+          <p><strong>Motivo:</strong> {{ item.reason }}</p>
+          <div class="actions">
+            @if (canPatientCancel(item) || canAdminCancel(item)) {
+              <button class="btn danger" (click)="cancel(item.id)">Cancelar</button>
+            }
+          </div>
+        </article>
+      } @empty {
+        <div class="card">
+          <p class="muted">No hay citas registradas.</p>
+        </div>
+      }
+    </div>
+  }
+
+  @if (otherAppointments().length && isDoctor()) {
+    <div class="card" style="margin-top: 18px;">
+      <h2>Citas canceladas</h2>
+      @for (item of otherAppointments(); track item.id) {
+        <div style="padding: 14px 0; border-bottom: 1px solid var(--border);">
+          <div class="actions" style="justify-content: space-between;">
+            <strong>{{ item.patientName }}</strong>
+            <span class="muted">{{ item.scheduledAt | date:'medium' }}</span>
+          </div>
+          <p><strong>Motivo:</strong> {{ item.reason }}</p>
+        </div>
+      }
+    </div>
+  }
+</section>

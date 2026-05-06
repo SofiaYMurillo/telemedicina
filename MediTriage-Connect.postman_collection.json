@@ -1,0 +1,107 @@
+{
+  "info": {
+    "name": "MediTriage Connect API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"patient@meditriage.com\",\n  \"password\": \"Patient123*\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Nuevo Paciente\",\n  \"email\": \"nuevo@meditriage.com\",\n  \"password\": \"Password123*\",\n  \"role\": \"PATIENT\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Triage - Evaluate",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/triage/evaluate",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"symptoms\": [\"fiebre\", \"dificultad para respirar\"],\n  \"temperature\": 39.1,\n  \"age\": 62,\n  \"durationDays\": 2\n}"
+        }
+      }
+    },
+    {
+      "name": "Doctors - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/doctors"
+      }
+    },
+    {
+      "name": "Appointments - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/appointments",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"doctorId\": 1,\n  \"scheduledAt\": \"2027-05-10T14:30:00\",\n  \"reason\": \"Consulta por fiebre persistente\"\n}"
+        }
+      }
+    }
+  ]
+}

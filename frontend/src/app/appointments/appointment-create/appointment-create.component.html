@@ -1,0 +1,46 @@
+<section class="container">
+  <div class="page-title">
+    <h1>Agendar teleconsulta</h1>
+    <p>Selecciona un doctor disponible y una fecha futura.</p>
+  </div>
+
+  <div class="card" style="max-width: 680px;">
+    @if (error()) {
+      <div class="alert error">{{ error() }}</div>
+    }
+
+    @if (canCreate()) {
+      <form class="form-grid" (ngSubmit)="submit()">
+        <label>
+          Doctor
+          <select name="doctorId" [(ngModel)]="doctorId" required>
+            @for (doctor of doctors(); track doctor.id) {
+              <option [value]="doctor.id">{{ doctor.name }} - {{ doctor.specialty }}</option>
+            }
+          </select>
+        </label>
+
+        <label>
+          Fecha y hora
+          <input name="scheduledAt" type="datetime-local" [(ngModel)]="scheduledAt" [min]="minScheduledAt" required>
+        </label>
+
+        <label>
+          Motivo
+          <textarea name="reason" [(ngModel)]="reason" required></textarea>
+        </label>
+
+        <div class="actions">
+          <button class="btn" type="submit" [disabled]="loading()">
+            {{ loading() ? 'Agendando...' : 'Agendar cita' }}
+          </button>
+          <a class="btn secondary" routerLink="/appointments">Volver</a>
+        </div>
+      </form>
+    } @else {
+      <div class="actions">
+        <a class="btn secondary" routerLink="/appointments">Ver citas</a>
+      </div>
+    }
+  </div>
+</section>
